@@ -91,9 +91,9 @@ Same as `makeLogging`, but keeping an in-memory record of all messages (and cont
 purposes.
 
 ```ts
-import { makeLoggingWithRecord } from "@plandek-utils/logging";
+import { makeLoggingWithRecord, type PreparedLogger } from "@plandek-utils/logging";
 
-const logger = buildPinoLogger("info");
+const logger: PreparedLogger = buildPinoLogger("info");
 const loggingWithRecords = makeLoggingWithRecord({ logger, section: "api" });
 
 loggingWithRecords.info("User logged in", { userId: 123 });

@@ -1,9 +1,33 @@
-import { type LevelWithSilent, type Logger, pino } from "pino";
+import { type LevelWithSilent, type Logger as PinoLogger, pino } from "pino";
 import type { DeepReadonly } from "simplytyped";
 import { colorize } from "json-colorizer";
 import chalk from "chalk";
 
 import type { PlainObject, PlainObjectValue } from "@plandek-utils/plain-object";
+
+/**
+ * Prepares a Pino logger with the common configuration.
+ *
+ * @param level - The log level to use.
+ * @param redactPaths - Paths to redact from the logs. Defaults to `["req.headers.authorization", "req.headers.cookie"]`.
+ * @returns PinoLogger
+ */
+export function buildPinoLogger(
+  level: LevelWithSilent,
+  redactPaths: string[] = ["req.headers.authorization", "req.headers.cookie"],
+): PinoLogger {
+  return pino({
+    level,
+    timestamp: pino.stdTimeFunctions.isoTime,
+    redact: { paths: redactPaths, censor: "[REDACTED]" }, // This is not working >:(
+  });
+}
+
+/**
+ * Prepared pino logger, returned by `buildPinoLogger`
+ * @see buildPinoLogger
+ */
+export type PreparedLogger = ReturnType<typeof buildPinoLogger>;
 
 /**
  * Util to serialise as JSON the given value, pretty-printed (2 spaces).
@@ -70,24 +94,6 @@ export function makeColourUtils(mode: "with-colour" | "plain"): LogColourUtils {
 }
 
 /**
- * Prepares a Pino logger with the common configuration.
- *
- * @param level - The log level to use.
- * @param redactPaths - Paths to redact from the logs. Defaults to `["req.headers.authorization", "req.headers.cookie"]`.
- * @returns Logger
- */
-export function buildPinoLogger(
-  level: LevelWithSilent,
-  redactPaths: string[] = ["req.headers.authorization", "req.headers.cookie"],
-): Logger {
-  return pino({
-    level,
-    timestamp: pino.stdTimeFunctions.isoTime,
-    redact: { paths: redactPaths, censor: "[REDACTED]" }, // This is not working >:(
-  });
-}
-
-/**
  * Logging interface. Requires a message (string) and optionally an object to log, which is required to be a Plain Object to ensure serialisation.
  */
 type LogFn = (msg: string, obj?: DeepReadonly<PlainObject>) => void;
@@ -96,7 +102,7 @@ type LogFn = (msg: string, obj?: DeepReadonly<PlainObject>) => void;
  * Logging interface that provides a way to log messages with different levels. It should be configured with sections. It can return a new instance with a new section.
  */
 export type Logging = {
-  logger: Logger;
+  logger: PreparedLogger;
   info: LogFn;
   warn: LogFn;
   debug: LogFn;
@@ -130,7 +136,7 @@ export function isLoggingWithRecords(obj: Logging): obj is LoggingWithRecords {
 /**
  * Creates a Logging object. It requires an actual pino logger to be sent, and optionally a section and a context.
  */
-export function makeLogging(opts: { section?: string; context?: PlainObject; logger: Logger }): Logging {
+export function makeLogging(opts: { section?: string; context?: PlainObject; logger: PreparedLogger }): Logging {
   const logger = loggerFor(opts.logger, opts.section ?? null, opts.context ?? null);
 
   return {
@@ -154,7 +160,7 @@ export function makeLogging(opts: { section?: string; context?: PlainObject; log
  * Creates a LoggingWithRecords object. It requires an actual pino logger to be sent, and optionally a section and a context. You can pass it a "messages" record object to use or a new one will be created.
  */
 export function makeLoggingWithRecord(opts: {
-  logger: Logger;
+  logger: PreparedLogger;
   section?: string;
   context?: PlainObject;
   messages?: LoggingWithRecords["messages"];
@@ -188,7 +194,7 @@ export function makeLoggingWithRecord(opts: {
 
 // INTERNAL
 
-function loggerFor(givenLogger: Logger, section: string | null, context: PlainObject | null) {
+function loggerFor(givenLogger: PreparedLogger, section: string | null, context: PlainObject | null) {
   if (!context && (!section || loggerHasSection(givenLogger, section))) {
     return givenLogger;
   }
@@ -201,11 +207,11 @@ function loggerFor(givenLogger: Logger, section: string | null, context: PlainOb
   return givenLogger.child(childBindings);
 }
 
-function getSectionsFromLogger(logger: Logger) {
+function getSectionsFromLogger(logger: PreparedLogger) {
   return logger.bindings()["logSections"] ?? [];
 }
 
-function loggerHasSection(logger: Logger, section: string) {
+function loggerHasSection(logger: PreparedLogger, section: string) {
   const sections = getSectionsFromLogger(logger);
   return sections.includes(section);
 }
