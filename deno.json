@@ -1,9 +1,9 @@
 {
   "name": "@plandek-utils/logging",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "exports": "./src/mod.ts",
   "tasks": {
-    "release": "npx light-release",
+    "release": "npx light-release && deno fmt",
     "outdated": "deno run -rA jsr:@check/deps",
     "dev": "deno test  --allow-sys --watch src/mod.ts",
     "ci": "deno test --coverage --allow-sys && deno coverage --lcov --output=cov.lcov",
@@ -24,7 +24,11 @@
   },
   "nodeModulesDir": "auto",
   "fmt": {
-    "lineWidth": 120
+    "lineWidth": 120,
+    "include": ["src/", ".release-notes/"]
+  },
+  "lint": {
+    "include": ["src/", ".release-notes/"]
   },
   "publish": {
     "include": [
