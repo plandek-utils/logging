@@ -51,15 +51,21 @@ const plainColorUtils = makeColourUtils("plain");
 console.log(plainColorUtils.blue("Hello")); // Output: Hello as is.
 ```
 
-### `buildPinoLogger(level: LevelWithSilent, redactPaths?: string[]): Logger` and `parseLogLevelOrDefault()`
+### Loggers
+
+- for real: `buildPinoLogger(level: LevelWithSilent, redactPaths?: string[]): PreparedLogger`
+- for test: `buildSinkLogger(level: LevelWithSilent, bindings?: PlainObject): PreparedLogger`
+- parse log level: `parseLogLevelOrDefault(x: string): LogLevel`
 
 Creates a Pino logger with common configuration.
 
 ```ts
-import { buildPinoLogger, parseLogLevelOrDefault } from "@plandek-utils/logging";
+import { buildPinoLogger, buildSinkLogger, parseLogLevelOrDefault } from "@plandek-utils/logging";
 
 const level = parseLogLevelOrDefault(Deno.env.get("LOG_LEVEL"), "info"); // gets the log level if present, otherwise info. If the LOG_LEVEL is not a valid one it will throw.
 const logger = buildPinoLogger(level, ["req.headers.authorization"]);
+
+const testLogger = buildSinkLogger(level); // does not send any log -> useful for tests.
 
 logger.info({ req: { headers: { authorization: "Bearer token" } } }, "User logged in");
 // {"level":30,"time":"2024-10-28T11:10:58.250Z","pid":18166,"hostname":"044ce1509ebe","req":{"headers":{"authorization":"[REDACTED]"}},"msg":"User logged in"}

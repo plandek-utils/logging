@@ -5,6 +5,7 @@ import { colorize as colorizeJson } from "json-colorizer";
 
 import {
   buildPinoLogger,
+  buildSinkLogger,
   colorPrettyJSON,
   colourPrettyJSON,
   isLoggingWithRecords,
@@ -13,28 +14,6 @@ import {
   makeLoggingWithRecord,
   parseLogLevelOrDefault,
 } from "../mod.ts";
-
-describe("parseLogLevelOrDefault()", () => {
-  it("should return the default level when no level is provided", () => {
-    expect(parseLogLevelOrDefault(null, "debug")).toBe("debug");
-    expect(parseLogLevelOrDefault(undefined, "debug")).toBe("debug");
-    expect(parseLogLevelOrDefault("", "debug")).toBe("debug");
-  });
-
-  it("should parse valid log levels", () => {
-    expect(parseLogLevelOrDefault("fatal", "debug")).toBe("fatal");
-    expect(parseLogLevelOrDefault("error", "debug")).toBe("error");
-    expect(parseLogLevelOrDefault("warn", "debug")).toBe("warn");
-    expect(parseLogLevelOrDefault("info", "debug")).toBe("info");
-    expect(parseLogLevelOrDefault("debug", "debug")).toBe("debug");
-    expect(parseLogLevelOrDefault("trace", "debug")).toBe("trace");
-    expect(parseLogLevelOrDefault("silent", "debug")).toBe("silent");
-  });
-
-  it("should throw an error for invalid log levels", () => {
-    expect(() => parseLogLevelOrDefault("invalid", "debug")).toThrow("Invalid log level: invalid");
-  });
-});
 
 describe("colorPrettyJSON()", () => {
   it("with null: returns 'null'", () => {
@@ -97,15 +76,22 @@ describe("makeColourUtils", () => {
   });
 });
 
+describe("buildPinoLogger", () => {
+  it("should create a Pino logger with the given log level", () => {
+    const logger = buildPinoLogger("debug");
+    expect(logger.level).toBe("debug");
+  });
+});
+
 describe("isLoggingWithRecords", () => {
   it("should return true for LoggingWithRecords", () => {
-    const logger = buildPinoLogger("debug");
+    const logger = buildSinkLogger("debug");
     const loggingWithRecords = makeLoggingWithRecord({ logger });
     expect(isLoggingWithRecords(loggingWithRecords)).toBe(true);
   });
 
   it("should return false for Logging", () => {
-    const logger = buildPinoLogger("debug");
+    const logger = buildSinkLogger("debug");
     const logging = makeLogging({ logger });
     expect(isLoggingWithRecords(logging)).toBe(false);
   });
@@ -113,7 +99,7 @@ describe("isLoggingWithRecords", () => {
 
 describe("makeLogging", () => {
   it("should create a Logging object with default settings", () => {
-    const logger = buildPinoLogger("debug");
+    const logger = buildSinkLogger("debug");
     const logging = makeLogging({ logger });
     expect(typeof logging.info).toBe("function");
     expect(typeof logging.debug).toBe("function");
@@ -122,8 +108,9 @@ describe("makeLogging", () => {
   });
 
   it("should create a Logging object with custom section", () => {
-    const logger = buildPinoLogger("debug");
+    const logger = buildSinkLogger("debug");
     const logging = makeLogging({ logger, section: "custom" });
+    expect(logging.getSections()).toEqual(["custom"]);
     expect(typeof logging.info).toBe("function");
     expect(typeof logging.debug).toBe("function");
     expect(typeof logging.warn).toBe("function");
@@ -140,7 +127,7 @@ describe("makeLogging", () => {
 
 describe("makeLoggingWithRecord", () => {
   it("should create a LoggingWithRecords object", () => {
-    const logger = buildPinoLogger("debug");
+    const logger = buildSinkLogger("debug");
     const loggingWithRecords = makeLoggingWithRecord({ logger });
     expect(loggingWithRecords.messages).toBeDefined();
     expect(typeof loggingWithRecords.info).toBe("function");
@@ -150,7 +137,7 @@ describe("makeLoggingWithRecord", () => {
   });
 
   it("should preserve existing messages", () => {
-    const logger = buildPinoLogger("debug");
+    const logger = buildSinkLogger("debug");
     const loggingWithRecords = makeLoggingWithRecord({
       logger,
       messages: { info: [["some-test", null]], warn: [["some-test-warn", { a: 1 }]], debug: [], error: [] },
@@ -168,11 +155,33 @@ describe("makeLoggingWithRecord", () => {
   });
 
   it("should create a new LoggingWithRecords instance when withSection is called", () => {
-    const logger = buildPinoLogger("debug");
+    const logger = buildSinkLogger("debug");
     const loggingWithRecords = makeLoggingWithRecord({ logger, section: "first" });
     const newLoggingWithRecords = loggingWithRecords.withSection("custom");
     expect(newLoggingWithRecords).not.toBe(loggingWithRecords);
     expect(newLoggingWithRecords.getSections()).toEqual(["first", "custom"]);
     expect(newLoggingWithRecords.messages).toEqual({ info: [], warn: [], debug: [], error: [] });
+  });
+});
+
+describe("parseLogLevelOrDefault()", () => {
+  it("should return the default level when no level is provided", () => {
+    expect(parseLogLevelOrDefault(null, "debug")).toBe("debug");
+    expect(parseLogLevelOrDefault(undefined, "debug")).toBe("debug");
+    expect(parseLogLevelOrDefault("", "debug")).toBe("debug");
+  });
+
+  it("should parse valid log levels", () => {
+    expect(parseLogLevelOrDefault("fatal", "debug")).toBe("fatal");
+    expect(parseLogLevelOrDefault("error", "debug")).toBe("error");
+    expect(parseLogLevelOrDefault("warn", "debug")).toBe("warn");
+    expect(parseLogLevelOrDefault("info", "debug")).toBe("info");
+    expect(parseLogLevelOrDefault("debug", "debug")).toBe("debug");
+    expect(parseLogLevelOrDefault("trace", "debug")).toBe("trace");
+    expect(parseLogLevelOrDefault("silent", "debug")).toBe("silent");
+  });
+
+  it("should throw an error for invalid log levels", () => {
+    expect(() => parseLogLevelOrDefault("invalid", "debug")).toThrow("Invalid log level: invalid");
   });
 });

@@ -30,6 +30,16 @@ export function parseLogLevelOrDefault(level: string | null | undefined, default
 }
 
 /**
+ * Prepared pino logger, returned by `buildPinoLogger` or `buildSinkLogger`.
+ *
+ * @see buildPinoLogger
+ * @see buildSinkLogger
+ */
+export type PreparedLogger = Pick<PinoLogger, "level" | "info" | "debug" | "warn" | "error" | "bindings"> & {
+  child: (bindings: PlainObject) => PreparedLogger;
+};
+
+/**
  * Prepares a Pino logger with the common configuration.
  *
  * @param level - The log level to use.
@@ -39,7 +49,7 @@ export function parseLogLevelOrDefault(level: string | null | undefined, default
 export function buildPinoLogger(
   level: LogLevel,
   redactPaths?: string[],
-): PinoLogger {
+): PreparedLogger {
   const paths = redactPaths ?? ["req.headers.authorization", "req.headers.cookie"];
   return pino({
     level,
@@ -49,10 +59,20 @@ export function buildPinoLogger(
 }
 
 /**
- * Prepared pino logger, returned by `buildPinoLogger`
- * @see buildPinoLogger
+ * A mock logger that does nothing, holds no binding (sections).
  */
-export type PreparedLogger = ReturnType<typeof buildPinoLogger>;
+export function buildSinkLogger(level: LogLevel, givenBindings?: PlainObject): PreparedLogger {
+  const bindings = givenBindings ?? {};
+  return {
+    level,
+    info: () => {},
+    debug: () => {},
+    warn: () => {},
+    error: () => {},
+    child: (childBindings?: PlainObject) => buildSinkLogger(level, { ...bindings, ...childBindings }),
+    bindings: () => bindings,
+  };
+}
 
 /**
  * Util to serialise as JSON the given value, pretty-printed (2 spaces).
