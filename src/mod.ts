@@ -1,4 +1,4 @@
-import { type LevelWithSilent, type Logger as PinoLogger, pino } from "pino";
+import { type Logger as PinoLogger, pino } from "pino";
 import type { DeepReadonly } from "simplytyped";
 import { colorize } from "json-colorizer";
 import chalk from "chalk";
@@ -6,9 +6,28 @@ import chalk from "chalk";
 import type { PlainObject, PlainObjectValue } from "@plandek-utils/plain-object";
 
 /**
+ * Allowed log levels for the logger.
+ */
+export const LOG_LEVELS = ["fatal", "error", "warn", "info", "debug", "trace", "silent"] as const;
+
+/**
  * Possible log levels for preparing the pino logger.
  */
-export type LogLevel = LevelWithSilent;
+export type LogLevel = typeof LOG_LEVELS[number];
+
+/**
+ * Parses the given log level, or returns the default level if it's not blank. If it is an invalid level it will throw an error.
+ */
+export function parseLogLevelOrDefault(level: string | null | undefined, defaultLevel: LogLevel): LogLevel {
+  if (!level) return defaultLevel;
+
+  const lowerLevel = level.toLowerCase() as LogLevel;
+  if (LOG_LEVELS.includes(lowerLevel)) {
+    return lowerLevel;
+  }
+
+  throw new Error(`Invalid log level: ${level}`);
+}
 
 /**
  * Prepares a Pino logger with the common configuration.
@@ -19,12 +38,13 @@ export type LogLevel = LevelWithSilent;
  */
 export function buildPinoLogger(
   level: LogLevel,
-  redactPaths: string[] = ["req.headers.authorization", "req.headers.cookie"],
+  redactPaths?: string[],
 ): PinoLogger {
+  const paths = redactPaths ?? ["req.headers.authorization", "req.headers.cookie"];
   return pino({
     level,
     timestamp: pino.stdTimeFunctions.isoTime,
-    redact: { paths: redactPaths, censor: "[REDACTED]" }, // This is not working >:(
+    redact: { paths, censor: "[REDACTED]" },
   });
 }
 

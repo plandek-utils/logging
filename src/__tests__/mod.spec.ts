@@ -11,7 +11,30 @@ import {
   makeColourUtils,
   makeLogging,
   makeLoggingWithRecord,
+  parseLogLevelOrDefault,
 } from "../mod.ts";
+
+describe("parseLogLevelOrDefault()", () => {
+  it("should return the default level when no level is provided", () => {
+    expect(parseLogLevelOrDefault(null, "debug")).toBe("debug");
+    expect(parseLogLevelOrDefault(undefined, "debug")).toBe("debug");
+    expect(parseLogLevelOrDefault("", "debug")).toBe("debug");
+  });
+
+  it("should parse valid log levels", () => {
+    expect(parseLogLevelOrDefault("fatal", "debug")).toBe("fatal");
+    expect(parseLogLevelOrDefault("error", "debug")).toBe("error");
+    expect(parseLogLevelOrDefault("warn", "debug")).toBe("warn");
+    expect(parseLogLevelOrDefault("info", "debug")).toBe("info");
+    expect(parseLogLevelOrDefault("debug", "debug")).toBe("debug");
+    expect(parseLogLevelOrDefault("trace", "debug")).toBe("trace");
+    expect(parseLogLevelOrDefault("silent", "debug")).toBe("silent");
+  });
+
+  it("should throw an error for invalid log levels", () => {
+    expect(() => parseLogLevelOrDefault("invalid", "debug")).toThrow("Invalid log level: invalid");
+  });
+});
 
 describe("colorPrettyJSON()", () => {
   it("with null: returns 'null'", () => {
