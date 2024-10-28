@@ -6,6 +6,11 @@ import chalk from "chalk";
 import type { PlainObject, PlainObjectValue } from "@plandek-utils/plain-object";
 
 /**
+ * Possible log levels for preparing the pino logger.
+ */
+export type LogLevel = LevelWithSilent;
+
+/**
  * Prepares a Pino logger with the common configuration.
  *
  * @param level - The log level to use.
@@ -13,7 +18,7 @@ import type { PlainObject, PlainObjectValue } from "@plandek-utils/plain-object"
  * @returns PinoLogger
  */
 export function buildPinoLogger(
-  level: LevelWithSilent,
+  level: LogLevel,
   redactPaths: string[] = ["req.headers.authorization", "req.headers.cookie"],
 ): PinoLogger {
   return pino({
