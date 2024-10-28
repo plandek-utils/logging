@@ -1,0 +1,39 @@
+{
+  "name": "@plandek-utils/logging",
+  "version": "0.1.0",
+  "exports": "./src/mod.ts",
+  "tasks": {
+    "release": "npx light-release",
+    "outdated": "deno run -rA jsr:@check/deps",
+    "dev": "deno test  --allow-sys --watch src/mod.ts",
+    "ci": "deno test --coverage --allow-sys && deno coverage --lcov --output=cov.lcov",
+    "test": "deno test --coverage --allow-sys",
+    "lcov": "deno coverage --lcov --output=cov.lcov",
+    "html": "genhtml -o html_cov cov.lcov"
+  },
+  "license": "MIT",
+  "imports": {
+    "@plandek-utils/plain-object": "jsr:@plandek-utils/plain-object@^0.2.3",
+    "@std/assert": "jsr:@std/assert@1",
+    "@std/expect": "jsr:@std/expect@^1.0.6",
+    "@std/testing": "jsr:@std/testing@^1.0.3",
+    "chalk": "npm:chalk@^5.3.0",
+    "json-colorizer": "npm:json-colorizer@^3.0.1",
+    "pino": "npm:pino@^9.5.0",
+    "simplytyped": "npm:simplytyped@^3.3.0"
+  },
+  "nodeModulesDir": "auto",
+  "fmt": {
+    "lineWidth": 120
+  },
+  "publish": {
+    "include": [
+      "LICENSE",
+      "README.md",
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/__tests__"
+    ]
+  }
+}
