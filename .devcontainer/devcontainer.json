@@ -22,7 +22,8 @@
         "streetsidesoftware.code-spell-checker",
         "ms-azuretools.vscode-docker",
         "EditorConfig.EditorConfig",
-        "GitHub.copilot"
+        "GitHub.copilot",
+        "phind.phind"
       ]
     }
   }
