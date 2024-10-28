@@ -1,3 +1,8 @@
+## [0.4.0] - October 28, 2024
+
+### Changes
+- Release notes generated for version [0.4.0](.release-notes/0.4.0/release.md)
+
 ## [0.3.0] - October 28, 2024
 
 ### Changes
