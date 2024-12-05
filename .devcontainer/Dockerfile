@@ -1,4 +1,4 @@
-FROM denoland/deno:bin-2.0.3 AS deno
+FROM denoland/deno:bin-2.1.2 AS deno
 FROM mcr.microsoft.com/devcontainers/typescript-node:20
 COPY --from=deno /deno /usr/local/bin/deno
 
@@ -7,4 +7,4 @@ RUN sed -i 's/Components: main/Components: main contrib non-free non-free-firmwa
 
 RUN apt-get -y update && apt-get -y --no-install-recommends install lcov && apt-get clean
 
-RUN npm install --global "eturino/light-release#feature/non-package-json-support"
+RUN npm install --global light-release@2.3

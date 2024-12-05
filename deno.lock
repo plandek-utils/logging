@@ -1,79 +1,89 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@plandek-utils/plain-object@~0.2.3": "0.2.3",
     "jsr:@std/assert@1": "1.0.6",
     "jsr:@std/assert@^1.0.6": "1.0.6",
-    "jsr:@std/async@^1.0.5": "1.0.7",
+    "jsr:@std/assert@^1.0.8": "1.0.8",
+    "jsr:@std/async@^1.0.8": "1.0.9",
     "jsr:@std/data-structures@^1.0.4": "1.0.4",
-    "jsr:@std/expect@^1.0.6": "1.0.6",
-    "jsr:@std/fs@^1.0.4": "1.0.5",
+    "jsr:@std/expect@^1.0.8": "1.0.8",
+    "jsr:@std/fs@^1.0.5": "1.0.6",
     "jsr:@std/internal@^1.0.4": "1.0.4",
-    "jsr:@std/path@^1.0.6": "1.0.7",
-    "jsr:@std/path@^1.0.7": "1.0.7",
-    "jsr:@std/testing@^1.0.3": "1.0.3",
-    "npm:@plandek-utils/ts-parse-dayjs@^5.1.0": "5.1.0",
+    "jsr:@std/internal@^1.0.5": "1.0.5",
+    "jsr:@std/path@^1.0.8": "1.0.8",
+    "jsr:@std/testing@^1.0.5": "1.0.5",
+    "npm:@plandek-utils/plain-object@^1.1.0": "1.1.0_zod@3.23.8",
     "npm:chalk@^5.3.0": "5.3.0",
     "npm:json-colorizer@^3.0.1": "3.0.1",
     "npm:pino@^9.5.0": "9.5.0",
     "npm:simplytyped@^3.3.0": "3.3.0_typescript@5.6.3"
   },
   "jsr": {
-    "@plandek-utils/plain-object@0.2.3": {
-      "integrity": "88c572728f419a363f22b27c7fe6427dc748697b7ca750c844719af42d3e3ab8",
-      "dependencies": [
-        "npm:@plandek-utils/ts-parse-dayjs"
-      ]
-    },
     "@std/assert@1.0.6": {
       "integrity": "1904c05806a25d94fe791d6d883b685c9e2dcd60e4f9fc30f4fc5cf010c72207",
       "dependencies": [
-        "jsr:@std/internal"
+        "jsr:@std/internal@^1.0.4"
       ]
     },
-    "@std/async@1.0.7": {
-      "integrity": "f4fadc0124432e37cba11e8b3880164661a664de00a65118d976848f32f96290"
+    "@std/assert@1.0.8": {
+      "integrity": "ebe0bd7eb488ee39686f77003992f389a06c3da1bbd8022184804852b2fa641b",
+      "dependencies": [
+        "jsr:@std/internal@^1.0.5"
+      ]
+    },
+    "@std/async@1.0.9": {
+      "integrity": "c6472fd0623b3f3daae023cdf7ca5535e1b721dfbf376562c0c12b3fb4867f91"
     },
     "@std/data-structures@1.0.4": {
       "integrity": "fa0e20c11eb9ba673417450915c750a0001405a784e2a4e0c3725031681684a0"
     },
-    "@std/expect@1.0.6": {
-      "integrity": "dffba969ca5ea6d7c39338d4985c9af2bfa6e080c710cc2b77756dd7657c369c",
+    "@std/expect@1.0.8": {
+      "integrity": "27e40d8f3aefb372fc6a703fb0b69e34560e72a2f78705178babdffa00119a5f",
       "dependencies": [
-        "jsr:@std/assert@^1.0.6",
-        "jsr:@std/internal"
+        "jsr:@std/assert@^1.0.8",
+        "jsr:@std/internal@^1.0.5"
       ]
     },
-    "@std/fs@1.0.5": {
-      "integrity": "41806ad6823d0b5f275f9849a2640d87e4ef67c51ee1b8fb02426f55e02fd44e",
+    "@std/fs@1.0.6": {
+      "integrity": "42b56e1e41b75583a21d5a37f6a6a27de9f510bcd36c0c85791d685ca0b85fa2",
       "dependencies": [
-        "jsr:@std/path@^1.0.7"
+        "jsr:@std/path"
       ]
     },
     "@std/internal@1.0.4": {
       "integrity": "62e8e4911527e5e4f307741a795c0b0a9e6958d0b3790716ae71ce085f755422"
     },
-    "@std/path@1.0.7": {
-      "integrity": "76a689e07f0e15dcc6002ec39d0866797e7156629212b28f27179b8a5c3b33a1"
+    "@std/internal@1.0.5": {
+      "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
     },
-    "@std/testing@1.0.3": {
-      "integrity": "f98c2bee53860a5916727d7e7d3abe920dd6f9edace022e2d059f00d05c2cf42",
+    "@std/path@1.0.8": {
+      "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+    },
+    "@std/testing@1.0.5": {
+      "integrity": "6e693cbec94c81a1ad3df668685c7ba8e20742bb10305bc7137faa5cf16d2ec4",
       "dependencies": [
-        "jsr:@std/assert@^1.0.6",
+        "jsr:@std/assert@^1.0.8",
         "jsr:@std/async",
         "jsr:@std/data-structures",
         "jsr:@std/fs",
-        "jsr:@std/internal",
-        "jsr:@std/path@^1.0.6"
+        "jsr:@std/internal@^1.0.5",
+        "jsr:@std/path"
       ]
     }
   },
   "npm": {
-    "@plandek-utils/ts-parse-dayjs@5.1.0": {
-      "integrity": "sha512-pUGSIs75EENVP2gFTfLxmuVX45oQMpTxGbnLMnPdGI1HLf3EEfFjzGDhsx27NbKEEve88r7N3JIqoepUjEv0og==",
+    "@plandek-utils/plain-object@1.1.0_zod@3.23.8": {
+      "integrity": "sha512-H8xrxqfPgwmiY6x+hLtdf14F/rQyjbEK6k+AsMGnPxGoMI1uSn6q8v98o6OwL+vnWvtm94v6x5bkkh2mmq961w==",
+      "dependencies": [
+        "@plandek-utils/ts-parse-dayjs",
+        "zod"
+      ]
+    },
+    "@plandek-utils/ts-parse-dayjs@6.0.0_zod@3.23.8": {
+      "integrity": "sha512-6M5eIUDUjXNutlDKa/2/rnCNXuEZGkmSEYjZkE/c5tOwuyfmPeLxdXt8wtPuxZoDheXgtWHVGE4L10YU2AX5NQ==",
       "dependencies": [
         "dayjs",
-        "lodash"
+        "zod"
       ]
     },
     "atomic-sleep@1.0.0": {
@@ -96,9 +106,6 @@
       "dependencies": [
         "colorette"
       ]
-    },
-    "lodash@4.17.21": {
-      "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
     },
     "on-exit-leak-free@2.1.2": {
       "integrity": "sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA=="
@@ -163,14 +170,17 @@
     },
     "typescript@5.6.3": {
       "integrity": "sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw=="
+    },
+    "zod@3.23.8": {
+      "integrity": "sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g=="
     }
   },
   "workspace": {
     "dependencies": [
-      "jsr:@plandek-utils/plain-object@~0.2.3",
       "jsr:@std/assert@1",
-      "jsr:@std/expect@^1.0.6",
-      "jsr:@std/testing@^1.0.3",
+      "jsr:@std/expect@^1.0.8",
+      "jsr:@std/testing@^1.0.5",
+      "npm:@plandek-utils/plain-object@^1.1.0",
       "npm:chalk@^5.3.0",
       "npm:json-colorizer@^3.0.1",
       "npm:pino@^9.5.0",
