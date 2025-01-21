@@ -1,12 +1,16 @@
 # @plandek-utils/logging
 
-[![JSR Scope](https://jsr.io/badges/@plandek-utils)](https://jsr.io/@plandek-utils)
-[![JSR](https://jsr.io/badges/@plandek-utils/logging)](https://jsr.io/@plandek-utils/logging)
-[![JSR Score](https://jsr.io/badges/@plandek-utils/logging/score)](https://jsr.io/@plandek-utils/logging)
+[![npm version](https://badge.fury.io/js/%40plandek-utils%2Flogging.svg)](https://badge.fury.io/js/%40plandek-utils%2Flogging)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4d6e32a1b993723d7c4f/maintainability)](https://codeclimate.com/github/plandek-utils/logging/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/4d6e32a1b993723d7c4f/test_coverage)](https://codeclimate.com/github/plandek-utils/logging/test_coverage)
 
 TypeScript utils for Logging. Includes prettifying of JSON, logging utils, and colour utils.
+
+## Installation
+
+```bash
+npm install @plandek-utils/logging
+```
 
 ## Usage
 
@@ -62,7 +66,7 @@ Creates a Pino logger with common configuration.
 ```ts
 import { buildPinoLogger, buildSinkLogger, parseLogLevelOrDefault } from "@plandek-utils/logging";
 
-const level = parseLogLevelOrDefault(Deno.env.get("LOG_LEVEL"), "info"); // gets the log level if present, otherwise info. If the LOG_LEVEL is not a valid one it will throw.
+const level = parseLogLevelOrDefault(process.env.LOG_LEVEL, "info"); // gets the log level if present, otherwise info. If the LOG_LEVEL is not a valid one it will throw.
 const logger = buildPinoLogger(level, ["req.headers.authorization"]);
 
 const testLogger = buildSinkLogger(level); // does not send any log -> useful for tests.
@@ -112,11 +116,15 @@ console.log(loggingWithRecords.messages.info);
 
 ## Development
 
-This package is developed with deno 2. The production code is in `src/mod.ts` and its test in
-`src/__tests__/mod.spec.ts`
+This package is developed with TypeScript and uses Vitest for testing.
 
-- `deno fmt src`: format files
-- `deno lint src`: lint files
-- `deno dev`: run tests on each change in mod.ts
-- `deno run test && deno run lcov && deno run html`: run the tests with coverage, then convert to lcov and prepare in
-  `html_cov` an HTML export of the coverage info.
+- `npm run build`: build the package
+- `npm test`: run tests
+- `npm run test:watch`: run tests in watch mode
+- `npm run test:coverage`: run tests with coverage
+- `npm run lint`: lint files
+- `npm run format`: format files
+
+## License
+
+MIT License - see LICENSE file

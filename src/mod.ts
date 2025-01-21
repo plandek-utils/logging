@@ -1,24 +1,39 @@
-import { type Logger as PinoLogger, pino } from "pino";
+import type { Logger as PinoLogger } from "pino";
+import { pino } from "pino";
 import type { DeepReadonly } from "simplytyped";
 import { colorize } from "json-colorizer";
 import chalk from "chalk";
 
-import type { PlainObject, PlainObjectValue } from "@plandek-utils/plain-object";
+import type {
+  PlainObject,
+  PlainObjectValue,
+} from "@plandek-utils/plain-object";
 
 /**
  * Allowed log levels for the logger.
  */
-export const LOG_LEVELS = ["fatal", "error", "warn", "info", "debug", "trace", "silent"] as const;
+export const LOG_LEVELS = [
+  "fatal",
+  "error",
+  "warn",
+  "info",
+  "debug",
+  "trace",
+  "silent",
+] as const;
 
 /**
  * Possible log levels for preparing the pino logger.
  */
-export type LogLevel = typeof LOG_LEVELS[number];
+export type LogLevel = (typeof LOG_LEVELS)[number];
 
 /**
  * Parses the given log level, or returns the default level if it's not blank. If it is an invalid level it will throw an error.
  */
-export function parseLogLevelOrDefault(level: string | null | undefined, defaultLevel: LogLevel): LogLevel {
+export function parseLogLevelOrDefault(
+  level: string | null | undefined,
+  defaultLevel: LogLevel
+): LogLevel {
   if (!level) return defaultLevel;
 
   const lowerLevel = level.toLowerCase() as LogLevel;
@@ -35,7 +50,10 @@ export function parseLogLevelOrDefault(level: string | null | undefined, default
  * @see buildPinoLogger
  * @see buildSinkLogger
  */
-export type PreparedLogger = Pick<PinoLogger, "level" | "info" | "debug" | "warn" | "error" | "bindings"> & {
+export type PreparedLogger = Pick<
+  PinoLogger,
+  "level" | "info" | "debug" | "warn" | "error" | "bindings"
+> & {
   child: (bindings: PlainObject) => PreparedLogger;
 };
 
@@ -48,9 +66,12 @@ export type PreparedLogger = Pick<PinoLogger, "level" | "info" | "debug" | "warn
  */
 export function buildPinoLogger(
   level: LogLevel,
-  redactPaths?: string[],
+  redactPaths?: string[]
 ): PreparedLogger {
-  const paths = redactPaths ?? ["req.headers.authorization", "req.headers.cookie"];
+  const paths = redactPaths ?? [
+    "req.headers.authorization",
+    "req.headers.cookie",
+  ];
   return pino({
     level,
     timestamp: pino.stdTimeFunctions.isoTime,
@@ -61,7 +82,10 @@ export function buildPinoLogger(
 /**
  * A mock logger that does nothing, holds no binding (sections).
  */
-export function buildSinkLogger(level: LogLevel, givenBindings?: PlainObject): PreparedLogger {
+export function buildSinkLogger(
+  level: LogLevel,
+  givenBindings?: PlainObject
+): PreparedLogger {
   const bindings = givenBindings ?? {};
   return {
     level,
@@ -69,7 +93,8 @@ export function buildSinkLogger(level: LogLevel, givenBindings?: PlainObject): P
     debug: () => {},
     warn: () => {},
     error: () => {},
-    child: (childBindings?: PlainObject) => buildSinkLogger(level, { ...bindings, ...childBindings }),
+    child: (childBindings?: PlainObject) =>
+      buildSinkLogger(level, { ...bindings, ...childBindings }),
     bindings: () => bindings,
   };
 }
@@ -114,12 +139,12 @@ export type LogColourUtils = {
 export function makeColourUtils(mode: "with-colour" | "plain"): LogColourUtils {
   if (mode === "with-colour") {
     return {
-      blue: chalk.blue,
-      cyan: chalk.cyan,
-      gray: chalk.gray,
-      magenta: chalk.magenta,
-      red: chalk.red,
-      yellow: chalk.yellow,
+      blue: (x: string) => chalk.blue(x),
+      cyan: (x: string) => chalk.cyan(x),
+      gray: (x: string) => chalk.gray(x),
+      magenta: (x: string) => chalk.magenta(x),
+      red: (x: string) => chalk.red(x),
+      yellow: (x: string) => chalk.yellow(x),
     };
   }
 
@@ -160,7 +185,11 @@ export type Logging = {
  * Variant of the Logging interface that stores the messages that have been logged.
  */
 export type LoggingWithRecords = Omit<Logging, "withSection"> & {
-  withSection(this: Logging, section: string, context?: PlainObject): LoggingWithRecords;
+  withSection(
+    this: Logging,
+    section: string,
+    context?: PlainObject
+  ): LoggingWithRecords;
   messages: {
     info: Array<[string, PlainObject | null]>;
     warn: Array<[string, PlainObject | null]>;
@@ -181,8 +210,16 @@ export function isLoggingWithRecords(obj: Logging): obj is LoggingWithRecords {
 /**
  * Creates a Logging object. It requires an actual pino logger to be sent, and optionally a section and a context.
  */
-export function makeLogging(opts: { section?: string; context?: PlainObject; logger: PreparedLogger }): Logging {
-  const logger = loggerFor(opts.logger, opts.section ?? null, opts.context ?? null);
+export function makeLogging(opts: {
+  section?: string;
+  context?: PlainObject;
+  logger: PreparedLogger;
+}): Logging {
+  const logger = loggerFor(
+    opts.logger,
+    opts.section ?? null,
+    opts.context ?? null
+  );
 
   return {
     logger,
@@ -211,11 +248,15 @@ export function makeLoggingWithRecord(opts: {
   messages?: LoggingWithRecords["messages"];
 }): LoggingWithRecords {
   const logging = makeLogging(opts);
-  const messages = opts.messages ?? { info: [], warn: [], debug: [], error: [] };
+  const messages = opts.messages ?? {
+    info: [],
+    warn: [],
+    debug: [],
+    error: [],
+  };
 
   function makeLogFn(logFn: LogFn, key: keyof typeof messages): LogFn {
     return (msg, obj) => {
-      // If object is a string, log it and store it
       messages[key].push([msg, obj ?? null]);
       return logFn(msg, obj);
     };
@@ -232,21 +273,33 @@ export function makeLoggingWithRecord(opts: {
       return logging.getSections();
     },
     withSection(section, context) {
-      return makeLoggingWithRecord({ logger: this.logger, section, messages, context });
+      return makeLoggingWithRecord({
+        logger: this.logger,
+        section,
+        messages,
+        context,
+      });
     },
   };
 }
 
 // INTERNAL
 
-function loggerFor(givenLogger: PreparedLogger, section: string | null, context: PlainObject | null) {
+function loggerFor(
+  givenLogger: PreparedLogger,
+  section: string | null,
+  context: PlainObject | null
+) {
   if (!context && (!section || loggerHasSection(givenLogger, section))) {
     return givenLogger;
   }
 
   const childBindings: Record<string, PlainObjectValue> = { ...context };
   if (section) {
-    childBindings["logSections"] = [...getSectionsFromLogger(givenLogger), section];
+    childBindings["logSections"] = [
+      ...getSectionsFromLogger(givenLogger),
+      section,
+    ];
   }
 
   return givenLogger.child(childBindings);

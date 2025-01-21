@@ -1,6 +1,4 @@
-import { expect } from "@std/expect";
-import { describe, it } from "@std/testing/bdd";
-
+import { describe, it, expect } from "vitest";
 import { colorize as colorizeJson } from "json-colorizer";
 
 import {
@@ -17,33 +15,33 @@ import {
 
 describe("colorPrettyJSON()", () => {
   it("with null: returns 'null'", () => {
-    expect(colorPrettyJSON(null)).toEqual(colorizeJson("null"));
-    expect(colourPrettyJSON(null)).toEqual(colorizeJson("null"));
+    expect(colorPrettyJSON(null)).toBe(colorizeJson("null"));
+    expect(colourPrettyJSON(null)).toBe(colorizeJson("null"));
   });
 
   it("with 1: returns '1'", () => {
-    expect(colorPrettyJSON(1)).toEqual(colorizeJson("1"));
-    expect(colourPrettyJSON(1)).toEqual(colorizeJson("1"));
+    expect(colorPrettyJSON(1)).toBe(colorizeJson("1"));
+    expect(colourPrettyJSON(1)).toBe(colorizeJson("1"));
   });
 
   it("with 'abc': returns '\"abc\"'", () => {
-    expect(colorPrettyJSON("abc")).toEqual(colorizeJson('"abc"'));
-    expect(colourPrettyJSON("abc")).toEqual(colorizeJson('"abc"'));
+    expect(colorPrettyJSON("abc")).toBe(colorizeJson('"abc"'));
+    expect(colourPrettyJSON("abc")).toBe(colorizeJson('"abc"'));
   });
 
   it("with []: returns '[]'", () => {
-    expect(colorPrettyJSON([])).toEqual(colorizeJson("[]"));
-    expect(colourPrettyJSON([])).toEqual(colorizeJson("[]"));
+    expect(colorPrettyJSON([])).toBe(colorizeJson("[]"));
+    expect(colourPrettyJSON([])).toBe(colorizeJson("[]"));
   });
 
   it("with {}: returns '{}'", () => {
-    expect(colorPrettyJSON({})).toEqual(colorizeJson("{}"));
-    expect(colourPrettyJSON({})).toEqual(colorizeJson("{}"));
+    expect(colorPrettyJSON({})).toBe(colorizeJson("{}"));
+    expect(colourPrettyJSON({})).toBe(colorizeJson("{}"));
   });
 
   it("with { a: 1 }: returns '{ a: 1 }' formatted", () => {
-    expect(colorPrettyJSON({ a: 1 })).toEqual(colorizeJson('{\n  "a": 1\n}'));
-    expect(colourPrettyJSON({ a: 1 })).toEqual(colorizeJson('{\n  "a": 1\n}'));
+    expect(colorPrettyJSON({ a: 1 })).toBe(colorizeJson('{\n  "a": 1\n}'));
+    expect(colourPrettyJSON({ a: 1 })).toBe(colorizeJson('{\n  "a": 1\n}'));
   });
 });
 
@@ -71,7 +69,6 @@ describe("makeColourUtils", () => {
   });
 
   it("should handle unknown modes", () => {
-    // deno-lint-ignore no-explicit-any
     expect(() => makeColourUtils("unknown" as any)).toThrow();
   });
 });
@@ -140,27 +137,49 @@ describe("makeLoggingWithRecord", () => {
     const logger = buildSinkLogger("debug");
     const loggingWithRecords = makeLoggingWithRecord({
       logger,
-      messages: { info: [["some-test", null]], warn: [["some-test-warn", { a: 1 }]], debug: [], error: [] },
+      messages: {
+        info: [["some-test", null]],
+        warn: [["some-test-warn", { a: 1 }]],
+        debug: [],
+        error: [],
+      },
     });
     loggingWithRecords.info("another test", { with: "context" });
     loggingWithRecords.warn("another test2", { with: "context2" });
     loggingWithRecords.debug("some debug");
     loggingWithRecords.error("some error");
-    expect(loggingWithRecords.messages.info).toEqual([["some-test", null], ["another test", { with: "context" }]]);
-    expect(loggingWithRecords.messages.warn).toEqual([["some-test-warn", { a: 1 }], ["another test2", {
-      with: "context2",
-    }]]);
+    expect(loggingWithRecords.messages.info).toEqual([
+      ["some-test", null],
+      ["another test", { with: "context" }],
+    ]);
+    expect(loggingWithRecords.messages.warn).toEqual([
+      ["some-test-warn", { a: 1 }],
+      [
+        "another test2",
+        {
+          with: "context2",
+        },
+      ],
+    ]);
     expect(loggingWithRecords.messages.debug).toEqual([["some debug", null]]);
     expect(loggingWithRecords.messages.error).toEqual([["some error", null]]);
   });
 
   it("should create a new LoggingWithRecords instance when withSection is called", () => {
     const logger = buildSinkLogger("debug");
-    const loggingWithRecords = makeLoggingWithRecord({ logger, section: "first" });
+    const loggingWithRecords = makeLoggingWithRecord({
+      logger,
+      section: "first",
+    });
     const newLoggingWithRecords = loggingWithRecords.withSection("custom");
     expect(newLoggingWithRecords).not.toBe(loggingWithRecords);
     expect(newLoggingWithRecords.getSections()).toEqual(["first", "custom"]);
-    expect(newLoggingWithRecords.messages).toEqual({ info: [], warn: [], debug: [], error: [] });
+    expect(newLoggingWithRecords.messages).toEqual({
+      info: [],
+      warn: [],
+      debug: [],
+      error: [],
+    });
   });
 });
 
@@ -182,6 +201,8 @@ describe("parseLogLevelOrDefault()", () => {
   });
 
   it("should throw an error for invalid log levels", () => {
-    expect(() => parseLogLevelOrDefault("invalid", "debug")).toThrow("Invalid log level: invalid");
+    expect(() => parseLogLevelOrDefault("invalid", "debug")).toThrow(
+      "Invalid log level: invalid"
+    );
   });
 });
