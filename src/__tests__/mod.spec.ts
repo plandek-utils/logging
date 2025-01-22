@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import { colorize as colorizeJson } from "json-colorizer";
+import { describe, expect, it } from "vitest";
 
 import {
   buildPinoLogger,
@@ -69,7 +69,7 @@ describe("makeColourUtils", () => {
   });
 
   it("should handle unknown modes", () => {
-    expect(() => makeColourUtils("unknown" as any)).toThrow();
+    expect(() => makeColourUtils("unknown" as "with-colour" | "plain")).toThrow();
   });
 });
 
@@ -201,8 +201,6 @@ describe("parseLogLevelOrDefault()", () => {
   });
 
   it("should throw an error for invalid log levels", () => {
-    expect(() => parseLogLevelOrDefault("invalid", "debug")).toThrow(
-      "Invalid log level: invalid"
-    );
+    expect(() => parseLogLevelOrDefault("invalid", "debug")).toThrow("Invalid log level: invalid");
   });
 });
