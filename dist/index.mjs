@@ -1,11 +1,18 @@
-// src/mod.ts
+// src/index.ts
 import chalk from "chalk";
 import { colorize } from "json-colorizer";
 import { pino } from "pino";
-var LOG_LEVELS = ["fatal", "error", "warn", "info", "debug", "trace", "silent"];
+var LOG_LEVELS = [
+  "fatal",
+  "error",
+  "warn",
+  "info",
+  "debug",
+  "trace",
+  "silent"
+];
 function parseLogLevelOrDefault(level, defaultLevel) {
-  if (!level)
-    return defaultLevel;
+  if (!level) return defaultLevel;
   const lowerLevel = level.toLowerCase();
   if (LOG_LEVELS.includes(lowerLevel)) {
     return lowerLevel;
@@ -13,7 +20,10 @@ function parseLogLevelOrDefault(level, defaultLevel) {
   throw new Error(`Invalid log level: ${level}`);
 }
 function buildPinoLogger(level, redactPaths) {
-  const paths = redactPaths ?? ["req.headers.authorization", "req.headers.cookie"];
+  const paths = redactPaths ?? [
+    "req.headers.authorization",
+    "req.headers.cookie"
+  ];
   return pino({
     level,
     timestamp: pino.stdTimeFunctions.isoTime,
@@ -71,7 +81,11 @@ function isLoggingWithRecords(obj) {
   return "messages" in obj;
 }
 function makeLogging(opts) {
-  const logger = loggerFor(opts.logger, opts.section ?? null, opts.context ?? null);
+  const logger = loggerFor(
+    opts.logger,
+    opts.section ?? null,
+    opts.context ?? null
+  );
   return {
     logger,
     info: (msg, obj) => logger.info(obj, msg),
@@ -82,8 +96,7 @@ function makeLogging(opts) {
       return getSectionsFromLogger(logger);
     },
     withSection(section, context) {
-      if (this.getSections().includes(section))
-        return this;
+      if (this.getSections().includes(section)) return this;
       return makeLogging({ logger: this.logger, section, context });
     }
   };
@@ -128,7 +141,10 @@ function loggerFor(givenLogger, section, context) {
   }
   const childBindings = { ...context };
   if (section) {
-    childBindings.logSections = [...getSectionsFromLogger(givenLogger), section];
+    childBindings.logSections = [
+      ...getSectionsFromLogger(givenLogger),
+      section
+    ];
   }
   return givenLogger.child(childBindings);
 }
@@ -152,4 +168,4 @@ export {
   parseLogLevelOrDefault,
   prettyJSON
 };
-//# sourceMappingURL=mod.js.map
+//# sourceMappingURL=index.mjs.map
