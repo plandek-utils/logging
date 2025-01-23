@@ -2,10 +2,8 @@ import { defineConfig } from "tsup";
 
 export default defineConfig({
   entry: ["src/index.ts"],
-  format: ["esm"],
-  dts: false, // we'll generate .d.ts files using tsc
   clean: true,
-  minify: false,
+  format: ["cjs", "esm"],
+  dts: false, // we will use `tsc` directly for it to prevent issues with `dayjs` plugin imports in the d.ts file
   sourcemap: true,
-  target: "es2020",
 });
