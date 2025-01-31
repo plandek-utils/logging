@@ -3,6 +3,13 @@
 ### Changes
 - Release notes generated for version [0.6.0](.release-notes/0.6.0/release.md)
 
+## [1.1.0](https://github.com/plandek-utils/logging/compare/v1.0.1...v1.1.0) (2025-01-31)
+
+
+### Features
+
+* fix structure and deps ([47c1adb](https://github.com/plandek-utils/logging/commit/47c1adb6365f8b944104b3f73a1d8173750f95e1))
+
 ## [1.0.1](https://github.com/plandek-utils/logging/compare/v1.0.0...v1.0.1) (2025-01-23)
 
 
