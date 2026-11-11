@@ -3,6 +3,13 @@
 ### Changes
 - Release notes generated for version [0.6.0](.release-notes/0.6.0/release.md)
 
+## [1.1.1](https://github.com/plandek-utils/logging/compare/v1.1.0...v1.1.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* PLAN-17573: test release to verify npm trusted publishing ([#8](https://github.com/plandek-utils/logging/issues/8)) ([896c1f5](https://github.com/plandek-utils/logging/commit/896c1f5ded89f5468e8daa8910a9af2d133057d7))
+
 ## [1.1.0](https://github.com/plandek-utils/logging/compare/v1.0.1...v1.1.0) (2025-01-31)
 
 
