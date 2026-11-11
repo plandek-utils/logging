@@ -3,6 +3,13 @@
 ### Changes
 - Release notes generated for version [0.6.0](.release-notes/0.6.0/release.md)
 
+## [1.2.0](https://github.com/plandek-utils/logging/compare/v1.1.1...v1.2.0) (2026-11-11)
+
+
+### Features
+
+* PLAN-17573: accept @plandek-utils/plain-object 3 ([#10](https://github.com/plandek-utils/logging/issues/10)) ([9b13f38](https://github.com/plandek-utils/logging/commit/9b13f382f6044247ffe57920d1b9c1cf7e590333))
+
 ## [1.1.1](https://github.com/plandek-utils/logging/compare/v1.1.0...v1.1.1) (2026-11-11)
 
 
